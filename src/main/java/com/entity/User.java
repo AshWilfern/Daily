@@ -1,6 +1,5 @@
 package com.entity;
 
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.util.List;
 
@@ -8,8 +7,6 @@ import java.util.List;
 @Table(name = "user")
 public class User {
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name= "increment", strategy= "increment")
     @Column(name = "id", length = 6, nullable = false)
     private long id;
 
@@ -58,33 +55,5 @@ public class User {
 
     public List<Calendar> getCalendars() {
         return calendars;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setCalendars(List<Calendar> calendars) {
-        this.calendars = calendars;
     }
 }

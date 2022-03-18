@@ -32,34 +32,6 @@ public class Task {
     @JoinColumn(name = "calendar_id", nullable = false)
     private Calendar calendar;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setCalendar(Calendar calendar) {
-        this.calendar = calendar;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setFinishDate(Date finishDate) {
-        this.finishDate = finishDate;
-    }
-
-    public void setPriority(Priority priority) {
-        this.priority = priority;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
     public long getId() {
         return id;
     }

@@ -26,12 +26,4 @@ public class Team {
     public List<User> getUsers() {
         return users;
     }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
 }

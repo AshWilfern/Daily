@@ -40,20 +40,4 @@ public class Calendar {
     public User getUser() {
         return user;
     }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 }
