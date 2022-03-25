@@ -6,7 +6,7 @@ import java.sql.Date;
 
 @Entity
 @Table(name = "task")
-public class Task {
+public class Task implements DailyEntity {
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name= "increment", strategy= "increment")
@@ -32,10 +32,23 @@ public class Task {
     @JoinColumn(name = "calendar_id", nullable = false)
     private Calendar calendar;
 
+    public Task(String name, Calendar calendar, String description, Date start, Date finish, Priority priority){
+        this.name = name;
+        this.calendar = calendar;
+        this.description = description;
+        this.startDate = start;
+        this.finishDate = finish;
+        this.priority = priority;
+    }
+
+    public Task(){}
+
+    @Override
     public long getId() {
         return id;
     }
 
+    @Override
     public String getName() {
         return name;
     }
