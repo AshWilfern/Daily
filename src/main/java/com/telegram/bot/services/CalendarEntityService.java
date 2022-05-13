@@ -25,10 +25,11 @@ public class CalendarEntityService {
     }
 
     public void deleteEntity(Calendar calendar) {
-        calendar.getTasks().forEach(x ->{
-            calendar.getTasks().remove(x);
-            taskRepository.delete(x);
-        });
+        taskRepository.findAllByCalendarId(calendar.getId()).get().forEach(x->{
+                calendar.getTasks().remove(x);
+                taskRepository.delete(x);
+            }
+        );
 
         calendarRepository.delete(calendar);
     }
