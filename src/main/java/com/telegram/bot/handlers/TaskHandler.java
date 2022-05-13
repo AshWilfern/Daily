@@ -17,6 +17,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -122,7 +123,7 @@ public class TaskHandler implements Handler {
         String[] query = message.split(", ");
         Calendar calendar = calendarController.getCalendar(Long.parseLong(query[1]));
         GregorianCalendar date = new GregorianCalendar();
-        date.set(java.util.Calendar.HOUR, 0);
+        date.set(java.util.Calendar.HOUR_OF_DAY, 0);
         date.set(java.util.Calendar.MINUTE, 0);
         date.set(java.util.Calendar.SECOND, 0);
         date.set(java.util.Calendar.MILLISECOND, 0);
@@ -423,7 +424,7 @@ public class TaskHandler implements Handler {
 
     public InlineKeyboardMarkup createTimeKeyboard(Integer hour, Long taskId) {
         GregorianCalendar currentTime = new GregorianCalendar();
-        currentTime.set(java.util.Calendar.HOUR,hour);
+        currentTime.set(java.util.Calendar.HOUR_OF_DAY,hour);
         currentTime.set(java.util.Calendar.MINUTE,0);
         currentTime.set(java.util.Calendar.SECOND,0);
         currentTime.set(java.util.Calendar.MILLISECOND,0);
@@ -461,7 +462,7 @@ public class TaskHandler implements Handler {
         while (hour < max) {
             inlineKeyboardRow = new ArrayList<>();
 
-            while (currentTime.getTime().getHours() == hour) {
+            while (currentTime.get(java.util.Calendar.HOUR_OF_DAY) == hour) {
                 time = new SimpleDateFormat("HH:mm").format(currentTime.getTime());
 
                 inlineKeyboardRow.add(createInlineKeyboardButton(time,
@@ -472,6 +473,7 @@ public class TaskHandler implements Handler {
             inlineKeyboard.add(inlineKeyboardRow);
             hour += 1;
         }
+
         inlineKeyboardRow = new ArrayList<>();
         inlineKeyboardRow.add(createInlineKeyboardButton("Cancel", TASK_EDIT + "&=" + taskId));
 
@@ -485,9 +487,8 @@ public class TaskHandler implements Handler {
     public List<SendMessage> setTaskTime(Task task, String message) {
         String[] timeParts = message.split(":");
         GregorianCalendar date = new GregorianCalendar();
-        date.set(java.util.Calendar.HOUR, Integer.parseInt(timeParts[0]));
+        date.set(java.util.Calendar.HOUR_OF_DAY, Integer.parseInt(timeParts[0]));
         date.set(java.util.Calendar.MINUTE, Integer.parseInt(timeParts[1]));
-
         date.set(java.util.Calendar.SECOND, 0);
         date.set(java.util.Calendar.MILLISECOND, 0);
         task.setTime(date);
@@ -519,11 +520,16 @@ public class TaskHandler implements Handler {
         userController.saveUser(task.getCalendar().getUser());
 
         SendMessage message = createMessageTemplate(task.getCalendar().getUser());
-        message
-                .setText("Main commands:");
+        message.setText("Main commands:");
         message.setReplyMarkup(createMainKeyboard(task.getCalendar().getUser()));
 
-        return List.of(message);
+        SendMessage messageTwo = displayTask(task);
+        messageTwo.setReplyMarkup(createAboutTaskInlineKeyboard(task.getId()));
+
+        SendMessage messageThree = createMessageTemplate(task.getCalendar().getUser());
+        messageThree.setText("Task saved:");
+
+        return List.of(messageThree, messageTwo, message);
     }
 
     public List<SendMessage> edit(Task task) {
@@ -543,13 +549,12 @@ public class TaskHandler implements Handler {
 
         final GregorianCalendar calendar = new GregorianCalendar();
 
-        calendar.set(java.util.Calendar.HOUR, 0);
+        calendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
         calendar.set(java.util.Calendar.MINUTE, 0);
         calendar.set(java.util.Calendar.SECOND, 0);
         calendar.set(java.util.Calendar.MILLISECOND, 0);
 
         if (command.length < 2) {
-
             d = calendar.get(java.util.Calendar.YEAR) + "-" + (calendar.get(java.util.Calendar.MONTH) + 1) + "-" + calendar.get(java.util.Calendar.DATE);
 
         } else {
@@ -557,6 +562,7 @@ public class TaskHandler implements Handler {
             String[] dP = d.split("-");
             calendar.set(Integer.parseInt(dP[2]), Integer.parseInt(dP[1]), Integer.parseInt(dP[0]));
         }
+
         for (Calendar c:user.getCalendars()) {
             messageToSend = createMessageTemplate(user);
 
@@ -568,7 +574,7 @@ public class TaskHandler implements Handler {
             tasks.stream()
                     .filter(h -> {
                         GregorianCalendar tD = h.getDate();
-                        tD.set(java.util.Calendar.HOUR, 0);
+                        tD.set(java.util.Calendar.HOUR_OF_DAY, 0);
                         tD.set(java.util.Calendar.MINUTE, 0);
                         tD.set(java.util.Calendar.SECOND, 0);
                         tD.set(java.util.Calendar.MILLISECOND, 0);
